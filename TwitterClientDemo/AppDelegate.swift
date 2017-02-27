@@ -43,49 +43,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
-        print(url.description)
         
-        
-        let requestToken = BDBOAuth1Credential(queryString: url.query)
-        let twitterClient = BDBOAuth1SessionManager(baseURL: NSURL(string: "https://api.twitter.com")! as URL!, consumerKey: "LM7FnN0nzqpCZ40yUebsFUpbN", consumerSecret: "C7ILb0yv5O7ik52jqaKKswyWdGwUni08cbAZ1IpbTjQ4sWvuDz")
-        twitterClient?.fetchAccessToken(withPath: "oauth/access_token", method: "POST", requestToken: requestToken, success: { (accessToken: BDBOAuth1Credential?) in
-            print ("Got access token!")
-            
-            
-            twitterClient?.get("1.1/account/verify_credentials.json", parameters: nil, progress: nil, success: { (task:URLSessionDataTask, response: Any?) in
-                
-                // print ("account: \(response)")
-                
-                let user = response as! NSDictionary
-                
-                
-                print ("name: \(user["name"]!)")
-                
-            }, failure: { (task: URLSessionDataTask?, error: Error) in
+        // print(url.description)
+    
+        TwitterClient.sharedInstance?.handleOpenUrl(url: url as NSURL)
 
-            })
-            
-            
-            twitterClient?.get("1.1/statuses/home_timeline.json", parameters: nil, progress: nil, success: { (task:URLSessionDataTask, response: Any?) in
-                
-                
-                // print (response)
-                let tweets = response as! [NSDictionary]
-                
-                for tweet in tweets {
-                    print ("\(tweet["text"]!)")
-                }
-                
-                
-                
-            }, failure: { (task: URLSessionDataTask?, error: Error) in
-                
-            })
-            
-            
-        }) {  (error: Error?) -> Void in
-            print ("error: \(error!.localizedDescription)")
-        }
         
         return true
     }
