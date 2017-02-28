@@ -19,6 +19,30 @@ class TwitterClient: BDBOAuth1SessionManager {
     var loginFailure:((NSError) -> ())?
     
     
+    func homeTimeline(success: @escaping ([Tweet]) -> (), failure: @escaping (NSError) -> ()) {
+        
+        get("1.1/statuses/home_timeline.json", parameters: nil, progress: nil, success: { (task:URLSessionDataTask, response: Any?) in
+            
+            
+            //            print (response!)
+            let dictionaries = response as! [NSDictionary]
+            
+            let tweets = Tweet.tweetsWithArray(dictionaries: dictionaries)
+            
+            
+            success(tweets)
+            
+            
+        }, failure: { (task: URLSessionDataTask?, error: Error) in
+            failure(error as NSError)
+            
+        })
+        
+        
+    }
+    
+    
+    
     func login(success: @escaping () -> (), failure:@escaping (NSError) -> ()) {
         
         loginSuccess = success
@@ -63,27 +87,6 @@ class TwitterClient: BDBOAuth1SessionManager {
         }
     }
     
-    func homeTimeline(success: @escaping ([Tweet]) -> (), failure: @escaping (NSError) -> ()) {
-        
-        get("1.1/statuses/home_timeline.json", parameters: nil, progress: nil, success: { (task:URLSessionDataTask, response: Any?) in
-            
-            
-//            print (response!)
-            let dictionaries = response as! [NSDictionary]
-            
-            let tweets = Tweet.tweetsWithArray(dictionaries: dictionaries)
-            
-            
-            success(tweets)
-            
-            
-        }, failure: { (task: URLSessionDataTask?, error: Error) in
-            failure(error as NSError)
-            
-        })
-
-        
-    }
     
     func currentAccount(success: @escaping (User) -> (), failure: @escaping (NSError) -> ()) {
         

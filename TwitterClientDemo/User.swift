@@ -38,37 +38,36 @@ class User: NSObject {
     
     static var _currentUser: User?
     
-    class var currentUser : User? {
+    class var currentUser: User? {
         get {
-            
-            if _currentUser == nil {
-                let defaults = UserDefaults.init()
-                let userData = defaults.object(forKey: "currentUserData")
-                
-                if let userData = userData {
-                    let dictionary = try! JSONSerialization.jsonObject(with: userData as! Data, options: [])
-                    _currentUser = User(dictionary: dictionary as! NSDictionary)
+            if let _currentUser = _currentUser {
+                return _currentUser
+            } else {
+                let defaults = UserDefaults.standard
+                if let data = defaults.data(forKey: "currentUserData"),
+                    let jsonData = try? JSONSerialization.jsonObject(with: data, options: []),
+                    let dictionary = jsonData as? [String: AnyObject] {
+                    _currentUser = User(dictionary: dictionary as NSDictionary)
+                    return _currentUser
                 }
+                return nil
             }
-            
-            return _currentUser
-        
         }
         set(user) {
             _currentUser = user
+            
             let defaults = UserDefaults.standard
-            
-            
             if let user = user {
-                let data = try! JSONSerialization.data(withJSONObject: user.dictionary!, options: [])
-                defaults.set (data, forKey: "currentUserData")
+                if let data = try? JSONSerialization.data(withJSONObject: user.dictionary!, options: []) {
+                    defaults.set(data, forKey: "currentUserData")
+                } else {
+                    defaults.set(nil, forKey: "currentUserData")
+                }
             } else {
                 defaults.set(nil, forKey: "currentUserData")
             }
-            
             defaults.synchronize()
         }
     }
-    
-
 }
+

@@ -8,37 +8,40 @@
 
 import UIKit
 
-class TweetsViewController: UIViewController {
-
-    var tweets: [Tweet]!
+class TweetsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+    
+    @IBOutlet weak var tableView: UITableView!
+    
+    private(set) var tweets = [Tweet]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        TwitterClient.sharedInstance?.homeTimeline(success: { (tweets: [Tweet]) -> () in
-            
-            self.tweets = tweets
-            
-            for tweet in tweets {
-                print (tweet.text!)
-            }
-        }, failure: { (error: NSError) -> () in
-            print (error.localizedDescription)
-        })
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+        tableView.dataSource = self
+        tableView.delegate = self
+        
+        TwitterClient.sharedInstance?.homeTimeline(
+            success: { (tweets) in
+                self.tweets = tweets
+                self.tableView.reloadData()
+        }, failure: { (error) in
+            print(error.localizedDescription)}
+        )
     }
     
-    @IBAction func onLogoutButton(_ sender: Any) {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        // TODO: Substitute with custom cell later
+        return UITableViewCell()
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return tweets.count
+    }
+    
+    @IBAction func onLogoutButton(_ sender: AnyObject) {
         TwitterClient.sharedInstance?.logout()
-        print ("logging out!")
     }
-    
-    
-
+}
     /*
     // MARK: - Navigation
 
@@ -49,4 +52,4 @@ class TweetsViewController: UIViewController {
     }
     */
 
-}
+

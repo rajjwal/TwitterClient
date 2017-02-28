@@ -23,14 +23,15 @@ class Tweet: NSObject {
         retweetCount = (dictionary["retweet_count"] as? Int) ?? 0
         favoritesCount = (dictionary["favourites_count"] as? Int) ?? 0
         
-        let timeStampString = dictionary["created_at"] as? String
-        
-        let formatter = DateFormatter()
-        formatter.dateFormat = "EE MMM d HH:mm:ss Z y"
-        
-        
-        if let timeStampString = timeStampString {
-            timestamp = formatter.date(from: timeStampString) as NSDate?
+        if let timestampString = dictionary["created_at"] as? String {
+            let formatter: DateFormatter = {
+                let f = DateFormatter()
+                f.dateFormat = "EEE MMM d HH:mm:ss Z y"
+                return f
+            }()
+            timestamp = formatter.date(from: timestampString) as NSDate?
+        } else {
+            timestamp = nil
         }
     }
     
