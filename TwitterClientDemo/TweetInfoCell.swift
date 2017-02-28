@@ -7,16 +7,30 @@
 //
 
 import UIKit
+import AFNetworking
 
 class TweetInfoCell: UITableViewCell {
+    
+    @IBOutlet weak var profileNameLabel: UILabel!
     @IBOutlet weak var tweetLabel: UILabel!
-    @IBOutlet weak var userNameLabel: UILabel!
-    @IBOutlet weak var userImageView: UIImageView!
-    override func awakeFromNib() {
-
-        super.awakeFromNib()
-        // Initialization code
+   
+    var tweet: Tweet! {
+        didSet {
+            profileNameLabel.text = tweet.profilename
+            tweetLabel.text = tweet.text as? String
+        }
     }
+    
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        
+        
+    }
+    
+
+    
+    
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)

@@ -60,7 +60,7 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="230" id="LhV-5m-C8k" customClass="TweetInfoCell" customModule="TwitterClientDemo" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="TweetInfoCell" rowHeight="230" id="LhV-5m-C8k" customClass="TweetInfoCell" customModule="TwitterClientDemo" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="375" height="230"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="LhV-5m-C8k" id="Txs-ga-1OI">
@@ -78,8 +78,8 @@
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="BBC News (World)" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wxk-Kr-dyL">
-                                                    <rect key="frame" x="89" y="36" width="278" height="65"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="BBC News (World)" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wxk-Kr-dyL">
+                                                    <rect key="frame" x="89" y="36" width="278" height="129"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
@@ -88,9 +88,8 @@
                                             </subviews>
                                         </tableViewCellContentView>
                                         <connections>
-                                            <outlet property="tweetLabel" destination="wxk-Kr-dyL" id="65x-Va-eMa"/>
-                                            <outlet property="userImageView" destination="6fF-d8-erg" id="znB-07-eaG"/>
-                                            <outlet property="userNameLabel" destination="oGn-1a-uvB" id="NIj-GJ-Q6i"/>
+                                            <outlet property="profileNameLabel" destination="oGn-1a-uvB" id="7Yn-ey-mi8"/>
+                                            <outlet property="tweetLabel" destination="wxk-Kr-dyL" id="p78-Vv-yw2"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>

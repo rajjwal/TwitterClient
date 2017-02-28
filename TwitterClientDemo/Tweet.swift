@@ -10,18 +10,24 @@ import UIKit
 
 class Tweet: NSObject {
     
+    var user: NSDictionary!
+    var profilename: String?
     var text: NSString?
     var timestamp: NSDate?
     var retweetCount: Int = 0
     var favoritesCount: Int = 0
+    var profileImageURL: URL?
     
     
     init (dictionary: NSDictionary) {
+        user = dictionary["user"] as? NSDictionary
         
-        text = dictionary["text"] as? String as NSString?
+        profilename = user["name"] as? String
         
-        retweetCount = (dictionary["retweet_count"] as? Int) ?? 0
-        favoritesCount = (dictionary["favourites_count"] as? Int) ?? 0
+        self.text = dictionary["text"] as? String as NSString?
+        
+        self.retweetCount = (dictionary["retweet_count"] as? Int) ?? 0
+        self.favoritesCount = (dictionary["favourites_count"] as? Int) ?? 0
         
         if let timestampString = dictionary["created_at"] as? String {
             let formatter: DateFormatter = {
@@ -32,6 +38,15 @@ class Tweet: NSObject {
             timestamp = formatter.date(from: timestampString) as NSDate?
         } else {
             timestamp = nil
+        }
+        
+        
+        
+        if let profileImageURLString = dictionary["profile_image_url_https"] as? String,
+            let profileImageURL = URL(string: profileImageURLString) {
+            self.profileImageURL = profileImageURL
+        } else {
+            self.profileImageURL = nil
         }
     }
     

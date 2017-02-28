@@ -19,6 +19,8 @@ class TweetsViewController: UIViewController, UITableViewDataSource, UITableView
         
         tableView.dataSource = self
         tableView.delegate = self
+        tableView.estimatedRowHeight = 120
+        
         
         TwitterClient.sharedInstance?.homeTimeline(
             success: { (tweets) in
@@ -31,6 +33,12 @@ class TweetsViewController: UIViewController, UITableViewDataSource, UITableView
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         // TODO: Substitute with custom cell later
+        if let cell = tableView.dequeueReusableCell(withIdentifier: "TweetInfoCell", for: indexPath) as? TweetInfoCell {
+            let tweet = tweets[indexPath.row]
+            cell.tweet = tweet
+            return cell
+        }
+        
         return UITableViewCell()
     }
     
