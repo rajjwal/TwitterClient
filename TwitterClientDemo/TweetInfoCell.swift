@@ -18,6 +18,10 @@ class TweetInfoCell: UITableViewCell {
     @IBOutlet weak var timestampLabel: UILabel!
     @IBOutlet weak var retweetCountLabel: UILabel!
     @IBOutlet weak var favoriteCountLabel: UILabel!
+    @IBOutlet weak var retweetButton: UIButton!
+    @IBOutlet weak var favoriteButton: UIButton!
+    
+    
     var tweet: Tweet! {
         didSet {
             profileNameLabel.text = tweet.profilename
@@ -27,7 +31,7 @@ class TweetInfoCell: UITableViewCell {
             usernameLabel.text = "@" + tweet.username!
             
             if let url = tweet.profileImageURL {
-                print (url)
+//                print (url)
                 profileImageView.setImageWith(url)
             }
             
@@ -50,11 +54,28 @@ class TweetInfoCell: UITableViewCell {
                     }()
                     timestampLabel.text = formatter.string(from: timestamp as Date)
                 }
-                
-                retweetCountLabel.text = String(tweet.retweetCount)
-                
-                favoriteCountLabel.text = String(tweet.favoritesCount)
             }
+            
+            retweetCountLabel.text = String(tweet.retweetCount)
+                
+            favoriteCountLabel.text = String(tweet.favoritesCount)
+            
+
+            
+    
+            if tweet.favorited {
+                favoriteButton.setImage(UIImage(named: "favor-icon-red") , for: .normal)
+            } else {
+                favoriteButton.setImage(UIImage(named: "favor-icon"), for: .normal)
+            }
+            
+            if tweet.retweeted {
+                retweetButton.setImage(UIImage(named: "retweet-icon-red") , for: .normal)
+            } else {
+                retweetButton.setImage(UIImage(named: "retweet-icon"), for: .normal)
+            }
+            
+            
         }
     }
     
@@ -76,5 +97,49 @@ class TweetInfoCell: UITableViewCell {
 
         // Configure the view for the selected state
     }
+    
+    @IBAction func onRetweetButton(_ sender: Any) {
+        // locally toggle tweet rted state
+        self.tweet.retweeted = !self.tweet.retweeted
+        // visually change button based on rted state
+        if self.tweet.retweeted {
+            retweetButton.setImage(UIImage(named: "retweet-icon-green") , for: .normal)
+            self.tweet.retweetCount += 1
+        } else {
+            retweetButton.setImage(UIImage(named: "retweet-icon"), for: .normal)
+            self.tweet.retweetCount -= 1
+        }
+        
+        // update count string
+        
+        self.retweetCountLabel.text = String(self.tweet.retweetCount)
+        
+        
+        // TODO: post to Twitter
+
+    }
+    
+    @IBAction func onFavoriteButton(_ sender: Any) {
+        
+        // toggle tweet favorited state
+        self.tweet.favorited = !self.tweet.favorited
+            
+        // visually change button based on favorited state
+        if self.tweet.favorited {
+            
+            favoriteButton.setImage(UIImage(named: "favor-icon-red") , for: .normal)
+            favoriteButton.imageEdgeInsets = UIEdgeInsets(top: 0.0, left: -1.0, bottom: 0.0, right: 0.0)
+            self.tweet.favoritesCount += 1
+        } else {
+            favoriteButton.setImage(UIImage(named: "favor-icon"), for: .normal)
+            favoriteButton.imageEdgeInsets = UIEdgeInsets(top: -4.0, left: 0.0, bottom: 0.0, right: 0.0)
+            self.tweet.favoritesCount -= 1
+        }
+        self.favoriteCountLabel.text = String(self.tweet.favoritesCount)
+        
+        // TODO: post to twitter
+    }
+    
+    
 
 }

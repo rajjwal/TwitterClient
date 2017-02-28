@@ -56,7 +56,7 @@ class TwitterClient: BDBOAuth1SessionManager {
             let tweets = Tweet.tweetsWithArray(dictionaries: dictionaries)
                 
             let tweetIDs = tweets.reduce([]) { (result, tweet) -> [Int] in
-                if let id = tweet.id {
+                if let id = tweet.tweetID {
                     return result + [id]
                 } else {
                     return result

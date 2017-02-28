@@ -15,11 +15,19 @@ class Tweet: NSObject {
     var username: String?
     var text: NSString?
     var timestamp: NSDate?
-    var retweetCount: Int = 0
-    var favoritesCount: Int = 0
+
     var profileImageURL: URL?
     
-    let id: Int?
+    var retweetCount: Int = 0
+    var favoritesCount: Int = 0
+    
+    
+    var favorited: Bool = false
+    var retweeted: Bool = false
+    
+    var retweetedStatus: NSDictionary?
+    
+    let tweetID: Int?
     
     
     init (dictionary: NSDictionary) {
@@ -47,15 +55,20 @@ class Tweet: NSObject {
             timestamp = nil
         }
         
+        
+        retweetedStatus = dictionary["retweeted_status"] as? NSDictionary
         //retweet count
         retweetCount = (dictionary["retweet_count"] as? Int) ?? 0
         
         // favourites count
-        favoritesCount = (dictionary["favourites_count"] as? Int) ?? 0
+        if let retweetedStatus = retweetedStatus {
+            favoritesCount = (retweetedStatus["favorite_count"] as? Int) ?? 0
+        } else {
+            favoritesCount = (dictionary["favorite_count"] as? Int) ?? 0
+        }
+
         
-        
-        
-        self.id = dictionary["id"] as? Int
+        self.tweetID = dictionary["id"] as? Int
         
         
         
@@ -66,6 +79,9 @@ class Tweet: NSObject {
         } else {
             self.profileImageURL = nil
         }
+        
+        favorited = dictionary["favorited"] as! Bool
+        retweeted = dictionary["retweeted"] as! Bool
         
     }
     
