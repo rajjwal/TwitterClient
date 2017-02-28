@@ -12,6 +12,7 @@ class Tweet: NSObject {
     
     var user: NSDictionary!
     var profilename: String?
+    var username: String?
     var text: NSString?
     var timestamp: NSDate?
     var retweetCount: Int = 0
@@ -20,15 +21,19 @@ class Tweet: NSObject {
     
     
     init (dictionary: NSDictionary) {
+        // User dictionary, contains profile name, profile image url, date created, location etc.
         user = dictionary["user"] as? NSDictionary
         
+        // profilename
         profilename = user["name"] as? String
         
-        self.text = dictionary["text"] as? String as NSString?
+        // Username
+        username = user["screen_name"] as? String
         
-        self.retweetCount = (dictionary["retweet_count"] as? Int) ?? 0
-        self.favoritesCount = (dictionary["favourites_count"] as? Int) ?? 0
+        // tweet text
+        text = dictionary["text"] as? String as NSString?
         
+        // time stamp
         if let timestampString = dictionary["created_at"] as? String {
             let formatter: DateFormatter = {
                 let f = DateFormatter()
@@ -40,14 +45,20 @@ class Tweet: NSObject {
             timestamp = nil
         }
         
+        //retweet count
+        retweetCount = (dictionary["retweet_count"] as? Int) ?? 0
         
+        // favourites count
+        favoritesCount = (dictionary["favourites_count"] as? Int) ?? 0
         
-        if let profileImageURLString = dictionary["profile_image_url_https"] as? String,
+        // profile image
+        if let profileImageURLString = user?["profile_image_url_https"] as? String,
             let profileImageURL = URL(string: profileImageURLString) {
             self.profileImageURL = profileImageURL
         } else {
             self.profileImageURL = nil
         }
+        
     }
     
     class func tweetsWithArray(dictionaries: [NSDictionary]) -> [Tweet]{
