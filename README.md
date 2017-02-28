@@ -2,7 +2,7 @@
 
 TwitterClient is a basic twitter app to read and compose tweets the [Twitter API](https://apps.twitter.com/).
 
-Time spent: 21 hours spent in total
+Time spent: 24 hours spent in total
 
 ## User Stories
 
@@ -25,7 +25,7 @@ The following **optional** features are implemented:
 
 Here's a walkthrough of implemented user stories:
 
-<img src='twitter_client.gif' />
+<img src='twitterClient.gif' />
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 

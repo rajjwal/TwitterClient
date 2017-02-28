@@ -43,6 +43,15 @@ class Tweet: NSObject {
         // tweet text
         text = dictionary["text"] as? String as NSString?
         
+        
+        // profile image
+        if let profileImageURLString = user?["profile_image_url_https"] as? String,
+            let profileImageURL = URL(string: profileImageURLString) {
+            self.profileImageURL = profileImageURL
+        } else {
+            self.profileImageURL = nil
+        }
+        
         // time stamp
         if let timestampString = dictionary["created_at"] as? String {
             let formatter: DateFormatter = {
@@ -71,14 +80,6 @@ class Tweet: NSObject {
         self.tweetID = dictionary["id"] as? Int
         
         
-        
-        // profile image
-        if let profileImageURLString = user?["profile_image_url_https"] as? String,
-            let profileImageURL = URL(string: profileImageURLString) {
-            self.profileImageURL = profileImageURL
-        } else {
-            self.profileImageURL = nil
-        }
         
         favorited = dictionary["favorited"] as! Bool
         retweeted = dictionary["retweeted"] as! Bool

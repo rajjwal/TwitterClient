@@ -24,14 +24,12 @@ class TweetInfoCell: UITableViewCell {
     
     var tweet: Tweet! {
         didSet {
-            profileNameLabel.text = tweet.profilename
             
+            profileNameLabel.text = tweet.profilename
+            usernameLabel.text = "@" + tweet.username!
             tweetLabel.text = tweet.text as? String
             
-            usernameLabel.text = "@" + tweet.username!
-            
             if let url = tweet.profileImageURL {
-//                print (url)
                 profileImageView.setImageWith(url)
             }
             
@@ -110,12 +108,16 @@ class TweetInfoCell: UITableViewCell {
             self.tweet.retweetCount -= 1
         }
         
-        // update count string
+        // update count label
         
         self.retweetCountLabel.text = String(self.tweet.retweetCount)
         
         
-        // TODO: post to Twitter
+        // post to Twitter
+        
+        if let id = self.tweet.tweetID {
+            TwitterClient.sharedInstance?.retweetStatus(retweeting: self.tweet.retweeted, id: "\(id)")
+        }
 
     }
     
@@ -137,7 +139,14 @@ class TweetInfoCell: UITableViewCell {
         }
         self.favoriteCountLabel.text = String(self.tweet.favoritesCount)
         
-        // TODO: post to twitter
+        // post to twitter
+        
+        if let id = self.tweet.tweetID {
+            TwitterClient.sharedInstance?.favoriteStatus(favoriting: self.tweet.favorited, id: "\(id)")
+        }
+
+        
+        
     }
     
     

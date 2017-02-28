@@ -100,6 +100,33 @@ class TwitterClient: BDBOAuth1SessionManager {
         }
     }
     
+    
+    func retweetStatus(retweeting: Bool, id: String) {
+        let endpoint = retweeting ? "retweet" : "unretweet"
+        post("1.1/statuses/\(endpoint)/\(id).json",
+            parameters: nil,
+            progress: nil,
+            success: {
+                (task: URLSessionDataTask, response: Any?) in
+            print("retweetStatus(): \(endpoint): success")
+        },
+             failure: { (task: URLSessionDataTask?, error: Error) in
+                print("retweetStatus(): ERROR: \(error)")
+        })
+        
+    }
+    
+    
+    func favoriteStatus(favoriting: Bool, id: String) {
+        let endpoint = favoriting ? "create" : "destroy"
+        post("1.1/favorites/\(endpoint).json?id=\(id)", parameters: nil, progress: nil, success: { (task: URLSessionDataTask, response: Any?) in
+            print("favoriteStatus(): \(endpoint): success")
+            },
+            failure: { (task: URLSessionDataTask?, error: Error) in
+            print("favoriteStatus(): ERROR: \(error)")
+            })
+    }
+    
     func logout() {
         User.currentUser = nil
         deauthorize()
