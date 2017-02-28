@@ -19,6 +19,8 @@ class Tweet: NSObject {
     var favoritesCount: Int = 0
     var profileImageURL: URL?
     
+    let id: Int?
+    
     
     init (dictionary: NSDictionary) {
         // User dictionary, contains profile name, profile image url, date created, location etc.
@@ -50,6 +52,12 @@ class Tweet: NSObject {
         
         // favourites count
         favoritesCount = (dictionary["favourites_count"] as? Int) ?? 0
+        
+        
+        
+        self.id = dictionary["id"] as? Int
+        
+        
         
         // profile image
         if let profileImageURLString = user?["profile_image_url_https"] as? String,

@@ -15,19 +15,56 @@ class TwitterClient: BDBOAuth1SessionManager {
     
     static let sharedInstance = TwitterClient(baseURL: NSURL(string: "https://api.twitter.com")! as URL!, consumerKey: "LM7FnN0nzqpCZ40yUebsFUpbN", consumerSecret: "C7ILb0yv5O7ik52jqaKKswyWdGwUni08cbAZ1IpbTjQ4sWvuDz")
     
+    
+    @objc enum LoadingMode: Int {
+        case RefreshTweets
+        case EarlierTweets
+    }
+    
+    var maxTweetId: Int?
+    var minTweetId: Int?
+    
+    
+    
     var loginSuccess: (() -> ())?
     var loginFailure:((NSError) -> ())?
     
     
-    func homeTimeline(success: @escaping ([Tweet]) -> (), failure: @escaping (NSError) -> ()) {
+    func homeTimeline(mode: LoadingMode, success: @escaping ([Tweet]) -> (), failure: @escaping (NSError) -> ()) {
         
-        get("1.1/statuses/home_timeline.json", parameters: nil, progress: nil, success: { (task:URLSessionDataTask, response: Any?) in
+        
+        var parameters = ["count": 20]
+            switch mode {
+            case .RefreshTweets:
+                if let maxTweetId = maxTweetId {
+                    parameters["since_id"] = maxTweetId
+                }
+            case .EarlierTweets:
+                if let minTweetId = minTweetId {
+                    parameters["max_id"] = minTweetId - 1
+                }
+            }
+        
+        get("1.1/statuses/home_timeline.json",
+            parameters: parameters,
+            progress: nil, success: { (task:URLSessionDataTask, response: Any?) in
             
             
             //            print (response!)
             let dictionaries = response as! [NSDictionary]
             
             let tweets = Tweet.tweetsWithArray(dictionaries: dictionaries)
+                
+            let tweetIDs = tweets.reduce([]) { (result, tweet) -> [Int] in
+                if let id = tweet.id {
+                    return result + [id]
+                } else {
+                    return result
+                }
+            }
+                
+                self.maxTweetId = tweetIDs.sorted().last
+                self.minTweetId = tweetIDs.sorted().first
             
             
             success(tweets)

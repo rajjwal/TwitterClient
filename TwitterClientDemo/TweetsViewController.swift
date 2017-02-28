@@ -12,6 +12,8 @@ class TweetsViewController: UIViewController, UITableViewDataSource, UITableView
     
     @IBOutlet weak var tableView: UITableView!
     
+    let refreshControl = UIRefreshControl()
+    
     var tweets = [Tweet]()
     
     var isMoreDataLoading = false;
@@ -24,6 +26,11 @@ class TweetsViewController: UIViewController, UITableViewDataSource, UITableView
         tableView.delegate = self
         tableView.estimatedRowHeight = 120
         
+        
+        // Set up Pull-to-refresh view
+        refreshControl.addTarget(self, action: #selector(TweetsViewController.loadMoreTimelineTweets(mode:)), for: .valueChanged)
+        tableView.insertSubview(refreshControl, at: 0)
+        
             
             
         // Set up Infinite Scroll loading indicator
@@ -34,20 +41,27 @@ class TweetsViewController: UIViewController, UITableViewDataSource, UITableView
         var insets = tableView.contentInset
         insets.bottom += InfiniteScrollActivityView.defaultHeight
         tableView.contentInset = insets
-        loadTimelineTweets()
+        loadMoreTimelineTweets(mode: .EarlierTweets)
     }
     
-    func loadTimelineTweets() {
+    func loadMoreTimelineTweets(mode: TwitterClient.LoadingMode) {
         TwitterClient.sharedInstance?.homeTimeline(
+            mode: mode,
             success: { (tweets) in
                 
                 self.isMoreDataLoading = false
                 self.loadingMoreView?.stopAnimating()
                 
-                self.tweets.append(contentsOf: tweets)
-                
+                switch mode {
+                case .RefreshTweets:
+                    self.tweets.insert(contentsOf: tweets, at: 0)
+                    self.refreshControl.endRefreshing()
+                case .EarlierTweets:
+                    self.tweets.append(contentsOf: tweets)
+                }
                 
                 self.tableView.reloadData()
+                
         }, failure: { (error) in
             print(error.localizedDescription)}
         )
@@ -64,7 +78,7 @@ class TweetsViewController: UIViewController, UITableViewDataSource, UITableView
                 let frame = CGRect(x: 0, y: tableView.contentSize.height, width: tableView.bounds.size.width, height: InfiniteScrollActivityView.defaultHeight)
                 loadingMoreView?.frame = frame
                 loadingMoreView!.startAnimating()
-                loadTimelineTweets()
+                loadMoreTimelineTweets(mode: .EarlierTweets)
             }
         }
     }
