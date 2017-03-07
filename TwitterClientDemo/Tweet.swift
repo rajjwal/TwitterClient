@@ -15,11 +15,38 @@ class Tweet: NSObject {
     var username: String?
     var text: NSString?
     var timestamp: NSDate?
+    
+    
+    var timeStampLongText: String {
+        get {
+            let calendar = Calendar.current
+            let TSYear = calendar.component(.year, from: timestamp as! Date)
+            let TSMonth = calendar.component(.month, from: timestamp as! Date)
+            let TSDay = calendar.component(.day, from: timestamp as! Date)
+            let TSHour = calendar.component(.hour, from: timestamp as! Date)
+            let TSMinute = calendar.component(.minute, from: timestamp as! Date)
+            
+            var hour = TSHour
+            var AMPM: String
+            if hour < 12 {
+                if hour == 0 {
+                    hour = 12
+                }
+                AMPM = "AM"
+            } else {
+                hour -= 12
+                AMPM = "PM"
+            }
+            return "\(TSMonth)/\(TSDay)/\(TSYear), \(TSHour):\(TSMinute) \(AMPM)"
+        }
+    }
 
     var profileImageURL: URL?
     
     var retweetCount: Int = 0
     var favoritesCount: Int = 0
+    
+    var author: User
     
     
     var favorited: Bool = false
@@ -79,10 +106,11 @@ class Tweet: NSObject {
         
         self.tweetID = dictionary["id"] as? Int
         
-        
+        author = User(dictionary: dictionary["user"] as! NSDictionary)
         
         favorited = dictionary["favorited"] as! Bool
         retweeted = dictionary["retweeted"] as! Bool
+        
         
     }
     

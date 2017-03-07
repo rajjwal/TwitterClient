@@ -87,14 +87,14 @@ class TweetInfoCell: UITableViewCell {
     }
     
 
-    
-    
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 
         // Configure the view for the selected state
     }
+    
+    
     
     @IBAction func onRetweetButton(_ sender: Any) {
         // locally toggle tweet rted state
@@ -120,6 +120,8 @@ class TweetInfoCell: UITableViewCell {
         }
 
     }
+    
+    
     
     @IBAction func onFavoriteButton(_ sender: Any) {
         
