@@ -13,7 +13,48 @@ class User: NSObject {
     var name: NSString?
     var screenname: NSString?
     var profileUrl: NSURL?
+    var bannerImageURL: URL?
     var tagline: NSString?
+    
+    var followingCount: Int = 0
+    var followingString: String {
+        get {
+            if followingCount >= 1000000 {
+                return "\(Double(followingCount/100000).rounded()/10)m"
+            } else if followingCount >= 1000 {
+                return "\(Double(followingCount/100).rounded()/10)k"
+            } else {
+                return "\(followingCount)"
+            }
+        }
+    }
+
+    var tweetsCount: Int = 0
+    var tweetsString: String {
+        get {
+            if tweetsCount >= 1000000 {
+                return "\(Double(tweetsCount/100000).rounded()/10)m"
+            } else if tweetsCount >= 1000 {
+                return "\(Double(tweetsCount/100).rounded()/10)k"
+            } else {
+                return "\(tweetsCount)"
+            }
+        }
+    }
+    
+    var followersCount: Int = 0
+    var followersString: String {
+        get {
+            if followersCount >= 1000000 {
+                return "\(Double(followersCount/100000).rounded()/10)m"
+            } else if followersCount >= 1000 {
+                return "\(Double(followersCount/100).rounded()/10)k"
+            } else {
+                return "\(followersCount)"
+            }
+        }
+    }
+
     
     var dictionary: NSDictionary?
     
@@ -29,7 +70,13 @@ class User: NSObject {
             profileUrl = NSURL(string: profileUrlString)
         }
         
+        bannerImageURL = URL(string: dictionary["profile_banner_url"] as? String ?? "")
+        
         tagline = dictionary["description"] as? String as NSString?
+        
+        followingCount = dictionary["friends_count"] as! Int
+        followersCount = dictionary["followers_count"] as! Int
+        tweetsCount = dictionary["statuses_count"] as! Int
         
     }
     
