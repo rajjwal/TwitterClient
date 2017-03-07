@@ -1,4 +1,4 @@
-# Project 5 - *Name of App Here*
+# Project 5 - TwitterClient
 
 Time spent: 14 hours spent in total
 
