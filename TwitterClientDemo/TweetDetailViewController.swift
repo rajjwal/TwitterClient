@@ -28,12 +28,12 @@ class TweetDetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        userImageView.setImageWith(tweet.profileImageURL!)
+        userImageView.setImageWith(tweet.author.profileImageUrl)
         userImageView.layer.cornerRadius = 5
         userImageView.clipsToBounds = true
         
-        nameLabel.text = tweet.profilename
-        screenNameLabel.text = "@" + tweet.username!
+        nameLabel.text = tweet.author.name as String?
+        screenNameLabel.text = "@" + (tweet.author.screenname as String)
         timeStampLabel.text = tweet.timeStampLongText
         tweetTextLabel.text = tweet.text as String?
         
@@ -130,21 +130,14 @@ class TweetDetailViewController: UIViewController {
         
     }
     
-
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
-    
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        let profileVC = segue.destination as! ProfileViewController
-        profileVC.user = tweet.author
+        print("preparing for segue \(segue.identifier)")
+        if segue.identifier == "ProfileSegue" {
+            let profileVC = segue.destination as! ProfileViewController
+            profileVC.user = tweet.author
+        } else {
+            let composeVC = segue.destination as! ComposeViewController
+            composeVC.startingText = "@\(tweet.author.screenname)"
+        }
     }
 }

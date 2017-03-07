@@ -116,6 +116,15 @@ class TwitterClient: BDBOAuth1SessionManager {
         
     }
     
+    func postTweet(success: @escaping () -> (), failure: @escaping (Error) -> (), status: String) {
+        post("1.1/statuses/update.json", parameters: ["status": status], progress: nil, success: { (task: URLSessionDataTask, response: Any?) in
+            print("posted tweet!! \(status)")
+            success()
+        }, failure: { (task: URLSessionDataTask?, error: Error) in
+            failure(error)
+        })
+    }
+    
     
     func favoriteStatus(favoriting: Bool, id: String) {
         let endpoint = favoriting ? "create" : "destroy"

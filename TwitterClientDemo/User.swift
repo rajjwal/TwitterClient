@@ -10,11 +10,11 @@ import UIKit
 
 class User: NSObject {
     
-    var name: NSString?
-    var screenname: NSString?
-    var profileUrl: NSURL?
+    var name: String
+    var screenname: String
+    var profileImageUrl: URL
     var bannerImageURL: URL?
-    var tagline: NSString?
+    var tagline: String
     
     var followingCount: Int = 0
     var followingString: String {
@@ -62,17 +62,14 @@ class User: NSObject {
         
         self.dictionary = dictionary
         
-        name = dictionary["name"] as? String as NSString?
-        screenname = dictionary["screen_name"] as? String as NSString?
+        name = dictionary["name"] as! String
+        screenname = dictionary["screen_name"] as! String
         
-        let profileUrlString = dictionary["profile_image_url_https"] as? String
-        if let profileUrlString = profileUrlString {
-            profileUrl = NSURL(string: profileUrlString)
-        }
+        profileImageUrl = URL(string: dictionary["profile_image_url_https"] as! String)!
         
         bannerImageURL = URL(string: dictionary["profile_banner_url"] as? String ?? "")
         
-        tagline = dictionary["description"] as? String as NSString?
+        tagline = dictionary["description"] as! String
         
         followingCount = dictionary["friends_count"] as! Int
         followersCount = dictionary["followers_count"] as! Int

@@ -35,12 +35,12 @@ class ProfileViewController: UIViewController {
         UserWrapperView.layer.cornerRadius = 5
         UserWrapperView.clipsToBounds = true
         
-        userImageView.setImageWith(user.profileUrl as! URL)
+        userImageView.setImageWith(user.profileImageUrl as URL)
         userImageView.layer.cornerRadius = 5
         userImageView.clipsToBounds = true
         
         nameLabel.text = user.name as String?
-        screenNameLabel.text = "@\(user.screenname!)"
+        screenNameLabel.text = "@\(user.screenname)"
         descriptionLabel.text = user.tagline as String?
         tweetsCountLabel.text = user.tweetsString
         followingCountLabel.text = user.followingString
@@ -52,15 +52,11 @@ class ProfileViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+        
+        let composeVC = segue.destination as! ComposeViewController
+        composeVC.startingText = "@\(user.screenname)"
     }
-    */
+
 
 }

@@ -26,7 +26,7 @@ class TweetsViewController: UIViewController, UITableViewDataSource, UITableView
         tableView.delegate = self
         
         tableView.rowHeight = UITableViewAutomaticDimension
-        tableView.estimatedRowHeight = 120
+        tableView.estimatedRowHeight = 100
         
         
         // Set up Pull-to-refresh view
@@ -89,6 +89,8 @@ class TweetsViewController: UIViewController, UITableViewDataSource, UITableView
         // TODO: Substitute with custom cell later
         if let cell = tableView.dequeueReusableCell(withIdentifier: "TweetInfoCell", for: indexPath) as? TweetInfoCell {
             let tweet = tweets[indexPath.row]
+            cell.profileButton.tag = indexPath.row
+            cell.replyButton.tag = indexPath.row
             cell.tweet = tweet
             return cell
         }
@@ -100,6 +102,9 @@ class TweetsViewController: UIViewController, UITableViewDataSource, UITableView
         return tweets.count
     }
     
+    
+
+    
     @IBAction func onLogoutButton(_ sender: AnyObject) {
         TwitterClient.sharedInstance?.logout()
     }
@@ -108,12 +113,30 @@ class TweetsViewController: UIViewController, UITableViewDataSource, UITableView
     // MARK: - Navigation
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        let cell = sender as! UITableViewCell
-        let indexPath = tableView.indexPath(for: cell)
-        let tweet = tweets[indexPath!.row]
+        print("preparing for segue: \(segue.identifier!)")
+        if (segue.identifier == "TweetDetailsSegue") {
+            let cell = sender as! UITableViewCell
+            let indexPath = tableView.indexPath(for: cell)
+            let tweet = tweets[indexPath!.row]
+            
+            let tweetDetailVC = segue.destination as! TweetDetailViewController
+            tweetDetailVC.tweet = tweet
+            
+        } else if (segue.identifier == "ReplySegue") {
+            let indexPathRow = (sender as! UIButton).tag
+            let tweet = tweets[indexPathRow];
+            
+            let composeVC = segue.destination as! ComposeViewController
+            composeVC.startingText = "@\(tweet.username!)"
         
-        let tweetDetailVC = segue.destination as! TweetDetailViewController
-        tweetDetailVC.tweet = tweet
+        } else if (segue.identifier == "ProfileSegue") {
+            let indexPathRow = (sender as! UIButton).tag
+            let tweet = tweets[indexPathRow];
+            
+            let profileVC = segue.destination as! ProfileViewController
+            profileVC.user = tweet.author
+            
+        }
     }
 }
 
